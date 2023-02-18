@@ -1,1 +1,0 @@
-This is the page related to the backend side of the app.
