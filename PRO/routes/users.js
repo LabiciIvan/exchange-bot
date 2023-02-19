@@ -1,18 +1,21 @@
 var express = require('express');
 var router = express.Router();
-var database = require('../config/mysql');
+// var database = require('../config/mysql');
 
+const correctData = require('../middleware/correctData');
 
-router.get('/', function(req, res, next) {
+router.use(correctData);
 
-  let sql = "INSERT INTO users (name, email) VALUES ('test', 'test@MediaList.com')";
-
-  res.send('I am response from users.js')
-  database.query(sql, (err, result) => {
-    if (err) throw err.message;
-    console.log('query succesfull');
-  })
+router.get('/', function(req, res) {
+  res.send(
+    data =  {
+      name: 'John Doe',
+      email: 'John-Doe@mail.com',
+      token: '$xasd7636w9cjsh='
+    }
+  )
 });
+
 
 
 module.exports = router;
