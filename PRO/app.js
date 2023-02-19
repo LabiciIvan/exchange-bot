@@ -1,11 +1,12 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+let createError = require('http-errors');
+let express = require('express');
+let path = require('path');
+let cookieParser = require('cookie-parser');
+let logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+let usersRouter = require('./routes/users');
+let exchangesRouter = require('./routes/exchanges');
+// let migrateRouter = require('./middleware/migrateBase');
 
 
 var app = express();
@@ -17,8 +18,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+// app.use('/migrate', migrateRouter);
 app.use('/users', usersRouter);
+app.use('/exchanges', exchangesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -33,7 +35,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.send({error: `${err.message} ${err.status}`});
 });
 
 module.exports = app;

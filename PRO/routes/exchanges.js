@@ -3,7 +3,7 @@ var router = express.Router();
 
 
 router.get('/', function(req, res, next) {
-  res.send({data: 'api request to index'})
+  res.send({data: 'request to exchanges'})
 });
 
 module.exports = router;
