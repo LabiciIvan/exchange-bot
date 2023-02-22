@@ -6,7 +6,7 @@ let logger = require('morgan');
 
 let usersRouter = require('./routes/users');
 let exchangesRouter = require('./routes/exchanges');
-// let migrateRouter = require('./config/migrations');
+let migrateRouter = require('./middleware/migrateBase');
 
 
 var app = express();
@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/migrate', migrateRouter);
+app.use('/migrate', migrateRouter);
 app.use('/users', usersRouter);
 app.use('/exchanges', exchangesRouter);
 
