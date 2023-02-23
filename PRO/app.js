@@ -6,7 +6,7 @@ let logger = require('morgan');
 
 let usersRouter = require('./routes/users');
 let exchangesRouter = require('./routes/exchanges');
-// let migrateRouter = require('./middleware/migrateBase');
+// let migrateRouter = require('./config/migrations');
 
 
 var app = express();
