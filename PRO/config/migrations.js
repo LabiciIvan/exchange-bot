@@ -1,6 +1,6 @@
 let express = require('express');
+let database = require('./mysql');
 let router = express.Router();
-let database = require('../config/mysql');
 
 
 router.get('/', (req, res) => {
