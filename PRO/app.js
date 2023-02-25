@@ -1,8 +1,8 @@
 let createError = require('http-errors');
-let express = require('express');
-let path = require('path');
 let cookieParser = require('cookie-parser');
+let express = require('express');
 let logger = require('morgan');
+let path = require('path');
 
 let usersRouter = require('./routes/users');
 let exchangesRouter = require('./routes/exchanges');

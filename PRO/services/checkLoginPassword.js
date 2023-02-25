@@ -1,17 +1,18 @@
-const express = require('express');
 const bcrypt = require('bcrypt');
+const express = require('express');
+const database = require('../config/mysql.js');
 
-const database = require('../config/mysql');
 
 /**
+ * @author Ioan Labici <labici.ioan@yahoo.com>
  * 
- * Middleware that will compare submited password 
- * to the password stored in the DB associated to the submited email in the request body.
- * If no email or password present in request body error is formated.
- * If no email associated to account it will format an error.
- * If password doesn't match, then it will format an error.
+ *  Checks if the email, pwd are present, if not it will throw error with status 400,
+ * if fields are present it will query the DATABASE 'password' for submited 'email' field, if
+ * there are no results it will send error, if there is result it will compare submited 'password'
+ * with the password returned from DATABASE, if everything is it will go to next middleware, if not 
+ * it will throw an error.
  */
-async function comparePassword(req, res, next) {
+async function checkLoginPassword(req, res, next) {
 
     let errorOn = false;
     let error = [];
@@ -23,7 +24,7 @@ async function comparePassword(req, res, next) {
   
     if (errorOn) {return res.status(400).send({error})}
 
-    let sql = `SELECT pwd FROM users WHERE email LIKE '%${req.body.email}%';`
+    let sql = `SELECT pwd FROM users WHERE email LIKE '${req.body.email}';`
 
     database.query(sql, (err, result) => {
         if (!result.length > 0) {
@@ -37,7 +38,7 @@ async function comparePassword(req, res, next) {
 
             // Handle the result of comparing submited password to stored one.
             if (!resultHash) {
-                return res.status(401).send({error: "Passwords don\/'t match to this account!"})
+                return res.status(401).send({error: "Passwords don't match to this account!"})
             } 
             next();
         })
@@ -48,4 +49,5 @@ async function comparePassword(req, res, next) {
 }
 
 
-module.exports = comparePassword;
+module.exports = checkLoginPassword;
+

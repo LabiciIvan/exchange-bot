@@ -1,15 +1,20 @@
+require("dotenv").config({path: "../.env"});
+
 const express = require('express');
 const router = express();
-const searchUser = require('../middleware/searchUsers');
-const hashPassword = require('../middleware/hashPassword');
+const jwt = require('jsonwebtoken');
 const database = require('../config/mysql');
+const hashPWD = require('../middleware/hashPWD');
+const verifyJWT = require("../middleware/verifyJWT");
+const verifyRequest = require("../middleware/verifyRequest");
+const checkSignUpData = require('../services/checkSignUpData');
+const checkAccountExists = require('../services/checkAccountExists');
+const checkLoginPassword = require('../services/checkLoginPassword');
 
-const helpers = require('../services/helpers');
-const comparePassword = require('../middleware/comparePassword');
 
-router.use(helpers.correctData);
+router.use(verifyRequest);
 
-router.get('/', function(req, res) {
+router.get('/', verifyJWT, (req, res) => {
   res.send(
     data =  {
       name: 'John Doe',
@@ -19,20 +24,10 @@ router.get('/', function(req, res) {
   )
 });
 
+
+
 // Route to sign up
-router.post('/signup', searchUser, hashPassword, (req, res) => {
-
-  let errorFound = false;
-  let error = [];
-
-  if (!req.body.name || !req.body.email || !req.body.pwd || !req.body.pwd_confirm ) errorFound = true;
-
-  !req.body.name ? error.push({name: "Field name is required"}) : '';
-  !req.body.email ? error.push({email: "Field email is required"}) : '';
-  !req.body.pwd ? error.push({password: "Field password is required"}) : '';
-  !req.body.pwd_confirm ? error.push({password_confirmation: "Field password confirmation is required"}) : '';
-
-  if (errorFound) {return res.status(400).send({error})}
+router.post('/signup',checkSignUpData , checkAccountExists, hashPWD, (req, res) => {
 
   let sqlStr = `INSERT INTO users(name, email, pwd) VALUES ('${req.body.name}','${req.body.email}','${req.body.pwd}');`;
 
@@ -43,22 +38,20 @@ router.post('/signup', searchUser, hashPassword, (req, res) => {
   })
 });
 
+
 // Route to sign in
-router.post('/signin', comparePassword, (req, res) => {
+router.post('/signin', checkLoginPassword, (req, res) => {
   
   let sql = `SELECT email FROM users WHERE email LIKE '%${req.body.email}%';`;
 
   database.query(sql, (err, result) => {
     if (err) throw err.message;
+
+    const accessToken = jwt.sign({account: JSON.parse(JSON.stringify(result[0]))}, process.env.ACCESS_TOKEN_SECRET);
     
-    return res.status(200).send({
-      message: 'You are logged in',
-      account: JSON.parse(JSON.stringify(result[0])),
-    });
+    return res.status(200).json({accessToken: accessToken});
   })
-})
-
-
+});
 
 
 module.exports = router;
