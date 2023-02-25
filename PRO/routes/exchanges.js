@@ -1,9 +1,13 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express();
+
+const verifyJWT = require('../middleware/verifyJWT');
 
 
-router.get('/', function(req, res, next) {
-  res.send({data: 'request to exchanges'})
+router.get('/', verifyJWT, (req, res) => {
+  
+return res.json({data: 'loogged in'})
+
 });
 
 module.exports = router;

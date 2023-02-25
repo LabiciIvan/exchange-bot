@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www",
+    "run-script": "./database/"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
@@ -12,8 +13,10 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "http-errors": "~1.6.3",
+    "jsonwebtoken": "^9.0.0",
     "morgan": "~1.9.1",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "mysql-migrations": "^1.0.7"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"
