@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const express = require('express');
-const database = require('../config/mysql.js');
+const DB = require('../config/mysql.js');
 
 
 /**
@@ -14,21 +14,22 @@ const database = require('../config/mysql.js');
  */
 async function checkLoginPassword(req, res, next) {
 
+
     let errorOn = false;
-    let error = [];
+    let error = {}
   
     if (!req.body.email || !req.body.pwd) errorOn = true;
   
-    !req.body.email ? error.push({email: "Field email is required"}) : '';
-    !req.body.pwd ? error.push({password: "Field password is required"}) : '';
+    !req.body.email ? error.email  = "Field email is required" : '';
+    !req.body.pwd ? error.password = "Field password is required" : '';
   
-    if (errorOn) {return res.status(400).send({error})}
+    if (errorOn) {return res.status(400).json(error)}
 
     let sql = `SELECT pwd FROM users WHERE email LIKE '${req.body.email}';`
 
-    database.query(sql, (err, result) => {
-        if (!result.length > 0) {
-            return res.status(400).send({error: "No account associated with the email!"})
+    DB.query(sql, (err, result) => {
+        if (result.length < 1) {
+            return res.status(400).json({error: "No account associated with the email!"})
         }
         if (err) throw err.message;
         let resu = JSON.parse(JSON.stringify(result[0]));
@@ -38,7 +39,7 @@ async function checkLoginPassword(req, res, next) {
 
             // Handle the result of comparing submited password to stored one.
             if (!resultHash) {
-                return res.status(401).send({error: "Passwords don't match to this account!"})
+                return res.status(401).json({error: "Passwords don't match to this account!"})
             } 
             next();
         })

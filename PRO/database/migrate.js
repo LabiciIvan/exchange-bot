@@ -8,7 +8,7 @@ const connection = database.createPool({
     host: (process.env.DB_HOST || null),
     user: (process.env.DB_USER || null),
     password: (process.env.DB_PWD || null),
-    database: (process.env.DB_NAME || null)
+    database: (process.env.DB_NAME || null),
 });
 
 migration.init(connection, __dirname + '/migrations/', function() {
