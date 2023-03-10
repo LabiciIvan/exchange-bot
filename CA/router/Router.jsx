@@ -16,16 +16,16 @@ const routes = createBrowserRouter([
         errorElement: <ErrorPage />
     },
     {
+        path: "/account",
+        element : <Account/>
+    },
+    {
         path: "/sign-up",
         element : <SignUp />
     },
     {
         path: "/sign-in",
         element : <SignIn />
-    },
-    {
-        path: "/account",
-        element : <Account/>
     },
     {
         path: "/reset-password",
