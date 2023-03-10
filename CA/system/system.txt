@@ -1,1 +1,0 @@
-this will contain js files that will be responsbile handling functionality for pages.

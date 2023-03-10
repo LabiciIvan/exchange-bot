@@ -13,9 +13,6 @@ const express = require('express');
 const checkSignUpData = (req, res, next) =>  {
     let errorFound = false;
     let error = [];
-    if (!req.body.name) {
-        console.log('no name here');
-    }
   
     if (!req.body.name || !req.body.email || !req.body.pwd || !req.body.pwd_confirm ) errorFound = true;
   
@@ -24,7 +21,7 @@ const checkSignUpData = (req, res, next) =>  {
     !req.body.pwd ? error.push({password: "Field password is required"}) : '';
     !req.body.pwd_confirm ? error.push({password_confirmation: "Field password confirmation is required"}) : '';
     
-    if (errorFound) {return res.status(400).send({error})} else {next()}
+    if (errorFound) {return res.status(400).json({error})} else {next()}
 }
 
 module.exports = checkSignUpData;

@@ -26,7 +26,7 @@ const verifyJWT = (req, res, next) => {
         if (err)  {  
             return res.status(403).json({error: 'Token expired'});
         } else {next()}
-    } )
+    });
 }
 
 

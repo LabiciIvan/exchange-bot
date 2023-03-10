@@ -1,5 +1,5 @@
 const express = require('express');
-const database = require('../config/mysql.js');
+const DB = require('../config/mysql.js');
 
 
 /**
@@ -13,7 +13,7 @@ const checkAccountExists = (req, res, next) => {
 
     const str = `SELECT * FROM users WHERE email LIKE '${req.body.email}';`;
 
-    database.query(str, (err, result) => {
+    DB.query(str, (err, result) => {
         
         if (err) {throw err.message; } else {
 

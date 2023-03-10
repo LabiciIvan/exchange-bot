@@ -1,24 +1,32 @@
-let createError = require('http-errors');
-let cookieParser = require('cookie-parser');
-let express = require('express');
-let logger = require('morgan');
-let path = require('path');
+const createError = require('http-errors');
+const cookieParser = require('cookie-parser');
+const express = require('express');
+const morgan = require('morgan');
+const path = require('path');
+const cors = require('cors');
 
 let usersRouter = require('./routes/users');
 let exchangesRouter = require('./routes/exchanges');
-//let migrateRouter = require('./middleware/migrateBase');
 
 
 var app = express();
 
+const corsOptions = {
+  origin: 'http://localhost:5500',
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-type', 'Accept','trusted'],
+  credentials: true,
+};
 
-app.use(logger('dev'));
+app.use(cors(corsOptions));
+
+
+app.use(morgan('tiny'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//app.use('/migrate', migrateRouter);
 app.use('/users', usersRouter);
 app.use('/exchanges', exchangesRouter);
 

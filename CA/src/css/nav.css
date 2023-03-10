@@ -1,0 +1,42 @@
+
+
+
+
+.nav-EB {
+    display: grid;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: 80px;
+    border-bottom: 2px solid gray;
+}
+
+.nav-btn {
+    justify-self: center;
+    align-self: center;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+.nav-btn:nth-child(2) {
+    grid-area: 1/9/2/10;
+}
+
+.nav-btn:nth-child(4) {
+    grid-area: 1/9/2/10;
+}
+
+.nav-btn:nth-child(3) {
+    grid-area: 1/10/2/11;
+}
+
+.nav-btn.out {
+    color: brown;
+    cursor: pointer;
+}
+
+.nav-btn.out:hover {
+    color: red;
+}
