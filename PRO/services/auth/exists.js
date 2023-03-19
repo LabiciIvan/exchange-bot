@@ -11,9 +11,9 @@ const DB = require('../../config/mysql.js');
  */
 const exists = (req, res, next) => {
 
-    const str = `SELECT * FROM users WHERE email LIKE '${req.body.email}';`;
+    const str = 'SELECT * FROM users WHERE email = ?';
 
-    DB.query(str, (err, result) => {
+    DB.query(str, [req.body.email], (err, result) => {
         
         if (err) {throw err.message; } else {
 
@@ -22,7 +22,7 @@ const exists = (req, res, next) => {
             if (resultQuery.length > 0) {
 
                 res.status(200);
-                return res.send({error : "This email is already taken!"});
+                return res.send({status: 'failed', message: 'This email is already taken!'});
 
             } else {
 

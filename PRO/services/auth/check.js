@@ -11,17 +11,16 @@ const express = require('express');
  * 
  */
 const check = (req, res, next) =>  {
-    let errorFound = false;
-    let error = [];
+    let error = {status: '', message: {name: '', email: '', pwd: '', pwd_confirm: ''}};
   
-    if (!req.body.name || !req.body.email || !req.body.pwd || !req.body.pwd_confirm ) errorFound = true;
+    if (!req.body.name || !req.body.email || !req.body.pwd || !req.body.pwd_confirm ) error.status = 'failed';
   
-    !req.body.name ? error.push({name: "Field name is required"}) : '';
-    !req.body.email ? error.push({email: "Field email is required"}) : '';
-    !req.body.pwd ? error.push({password: "Field password is required"}) : '';
-    !req.body.pwd_confirm ? error.push({password_confirmation: "Field password confirmation is required"}) : '';
+    if (!req.body.name) error.message.name = 'Field name is required!';
+    if (!req.body.email) error.message.email = 'Field email is required!';
+    if (!req.body.pwd) error.message.pwd = 'Field password is required!';
+    if (!req.body.pwd_confirm) error.message.pwd_confirm = 'Field password confirmation is required!';
     
-    if (errorFound) {return res.status(400).json({error})} else {next()}
+    if (error.status === 'failed') {return res.status(400).send(error)} else {next()}
 }
 
 module.exports = check;

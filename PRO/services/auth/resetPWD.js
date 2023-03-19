@@ -12,12 +12,12 @@ const resetPWD = (req, res, next) => {
 
     const CURRENT_DAY = moment().format("YYYY-MM-DD hh:mm:ss");
 
-    const SQL_QUERY = `UPDATE users SET pwd = ?, pwd_reset_requested = ?, pwd_reset = ? WHERE email = ?`;
+    const SQL_QUERY = 'UPDATE users SET pwd = ?, pwd_reset_requested = ?, pwd_reset = ? WHERE email = ?';
 
     DB.query(SQL_QUERY, [req.body.pwd,'Y', CURRENT_DAY, data.email], (err, result) => {
         if (err) throw err.message;
 
-        return res.status(202).json({success: 'Password changed'});
+        return res.status(202).json({status: 'success', message: 'Password successfully reset.'});
     });
 }
 
