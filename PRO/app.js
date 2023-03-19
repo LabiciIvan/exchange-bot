@@ -5,30 +5,24 @@ const morgan = require('morgan');
 const path = require('path');
 const cors = require('cors');
 
-let usersRouter = require('./routes/users');
-let exchangesRouter = require('./routes/exchanges');
+const CORS = require('./services/CORS');
 
+let users = require('./routes/users');
+let exchanges = require('./routes/exchanges');
 
 var app = express();
 
-const corsOptions = {
-  origin: 'http://localhost:5500',
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-type', 'Accept','trusted'],
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
-
-
-app.use(morgan('tiny'));
+app.use(cors(CORS));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.use(morgan('tiny'));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/users', usersRouter);
-app.use('/exchanges', exchangesRouter);
+
+app.use(`${process.env.APP_MAIN}users`, users);
+app.use(`${process.env.APP_MAIN}exchanges`, exchanges);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

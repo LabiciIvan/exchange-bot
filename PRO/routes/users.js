@@ -4,33 +4,31 @@ const express = require('express');
 const router = express();
 const jwt = require('jsonwebtoken');
 const DB = require('../config/mysql');
-const hashPWD = require('../middleware/hashPWD');
 const verifyJWT = require('../middleware/verifyJWT');
 const decodeJWT = require('../middleware/decodeJWT');
-const resetPassword = require('../middleware/resetPassword');
-const verifyRequest = require('../middleware/verifyRequest');
-const checkSignUpData = require('../services/checkSignUpData');
-const checkAccountExists = require('../services/checkAccountExists');
-const checkLoginPassword = require('../services/checkLoginPassword');
-const limitResetPassword = require("../middleware/limitResetPassword");
+
+const hashPWD = require('../services/auth/hashPWD');
+const check = require('../services/auth/check');
+const exists = require('../services/auth/exists');
+const login= require('../services/auth/login');
+const resetPWD = require('../services/auth/resetPWD');
+const limitResetPWD = require('../services/auth/limitResetPWD');
 
 
-// router.use(verifyRequest);
 
 router.get('/', verifyJWT, decodeJWT, (req, res) => {
-  res.send(
-    data =  {
-      name: 'John Doe',
-      email: 'John-Doe@mail.com',
-      token: '$xasd7636w9cjsh='
-    }
-  )
+
+  DB.query('SELECT * FROM users', (err, result) => {
+    if (err) throw err.message;
+    
+    return res.send(JSON.parse(JSON.stringify(result)));
+  })
 });
 
 
 
 // Route to sign up [ REGISTER or CREATE ACCOUNT ]
-router.post('/signup',checkSignUpData , checkAccountExists, hashPWD, (req, res) => {
+router.post('/signup',check, exists, hashPWD, (req, res) => {
 
   let sqlStr = `INSERT INTO users(name, email, pwd) VALUES ('${req.body.name}','${req.body.email}','${req.body.pwd}');`;
 
@@ -43,7 +41,7 @@ router.post('/signup',checkSignUpData , checkAccountExists, hashPWD, (req, res) 
 
 
 // Route to sign in | LOG IN
-router.post('/signin', checkLoginPassword, (req, res) => {
+router.post('/signin', login, (req, res) => {
   
   let sql = `SELECT email FROM users WHERE email LIKE '${req.body.email}';`;
 
@@ -59,7 +57,7 @@ router.post('/signin', checkLoginPassword, (req, res) => {
 
 
 // Route to get the RESET PASSWORD LINK
-router.post('/reset-password', limitResetPassword,  (req, res) => {
+router.post('/reset-password', limitResetPWD,  (req, res) => {
 
   const TOKEN = jwt.sign({email: req.body.email}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '10s'} )
 
@@ -84,7 +82,7 @@ router.post('/reset-password/verify/', (req, res, next) => {
 
   next();
 
-}, hashPWD, resetPassword);
+}, hashPWD, resetPWD);
 
 
 module.exports = router;

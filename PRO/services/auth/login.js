@@ -1,19 +1,14 @@
 const bcrypt = require('bcrypt');
 const express = require('express');
-const DB = require('../config/mysql.js');
+const DB = require('../../config/mysql.js');
 
 
 /**
  * @author Ioan Labici <labici.ioan@yahoo.com>
  * 
- *  Checks if the email, pwd are present, if not it will throw error with status 400,
- * if fields are present it will query the DATABASE 'password' for submited 'email' field, if
- * there are no results it will send error, if there is result it will compare submited 'password'
- * with the password returned from DATABASE, if everything is it will go to next middleware, if not 
- * it will throw an error.
+ * Checks if submited password matches the one from DB.
  */
-async function checkLoginPassword(req, res, next) {
-
+const login = (req, res, next) => {
 
     let errorOn = false;
     let error = {}
@@ -50,5 +45,5 @@ async function checkLoginPassword(req, res, next) {
 }
 
 
-module.exports = checkLoginPassword;
+module.exports = login;
 

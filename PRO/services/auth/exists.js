@@ -1,15 +1,15 @@
 const express = require('express');
-const DB = require('../config/mysql.js');
+const DB = require('../../config/mysql.js');
 
 
 /**
  * @author Ioan Labici <labici.ioan@yahoo.com>
  * Checks if the account exists, by running a query based
- * on he email submited in the POST request to the server.
- * The function runs the query and if result is bigger the 0
- * then we assume email is take.
+ * on the email submited in the POST request to the server.
+ * The function runs the query and if result is bigger then 0
+ * we assume email is taken.
  */
-const checkAccountExists = (req, res, next) => {
+const exists = (req, res, next) => {
 
     const str = `SELECT * FROM users WHERE email LIKE '${req.body.email}';`;
 
@@ -32,5 +32,5 @@ const checkAccountExists = (req, res, next) => {
     });
 }
 
-module.exports = checkAccountExists;
+module.exports = exists;
 

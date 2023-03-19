@@ -7,9 +7,9 @@ const jwt = require('jsonwebtoken');
 /**
  * @author Ioan Labici <labici.ioan@yahoo.com>
  * 
- *  Checks if the the token is header request, if not then will 
+ * Checks if the the token is header request, if not then will 
  * send error sayin you are not authorized.
- *  If token is present, it will check if token expired, if so it will
+ * If token is present, it will check if token expired, if so it will
  * send error saying token expired.
  */
 const verifyJWT = (req, res, next) => {

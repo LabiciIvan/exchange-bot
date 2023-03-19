@@ -1,11 +1,11 @@
 const moment = require('moment');
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const DB = require('../config/mysql.js');
+const DB = require('../../config/mysql.js');
 
 
 
-const resetPassword = (req, res, next) => {
+const resetPWD = (req, res, next) => {
 
     // Decode the token, after being verifyed by the main route /reset-password/verify/
     const data = jwt.decode(req.body.token);
@@ -21,4 +21,4 @@ const resetPassword = (req, res, next) => {
     });
 }
 
-module.exports = resetPassword;
+module.exports = resetPWD;

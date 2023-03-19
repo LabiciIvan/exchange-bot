@@ -1,7 +1,5 @@
 require('dotenv').config({path: '../.env'});
-
 const mysql = require('mysql')
-
 
 const DB = mysql.createPool({
   connectionLimit : 5,
