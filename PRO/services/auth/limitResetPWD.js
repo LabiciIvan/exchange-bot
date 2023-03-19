@@ -1,5 +1,5 @@
 const express = require('express');
-const DB = require('../config/mysql');
+const DB = require('../../config/mysql');
 const moment = require('moment');
 
 
@@ -7,7 +7,7 @@ const moment = require('moment');
  * Specific middleware responsible with limit password reset once a day
  * for any user.
  */
-const limitResetPassword = (req, res, next) => {
+const limitResetPWD = (req, res, next) => {
 
     const SQL_QUERY = "SELECT id, email, pwd_reset FROM users WHERE email = ?;";
 
@@ -38,4 +38,4 @@ const limitResetPassword = (req, res, next) => {
 
 }
 
-module.exports = limitResetPassword;
+module.exports = limitResetPWD;

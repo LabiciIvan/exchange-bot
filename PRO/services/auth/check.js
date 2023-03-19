@@ -10,7 +10,7 @@ const express = require('express');
  * and send back the response.
  * 
  */
-const checkSignUpData = (req, res, next) =>  {
+const check = (req, res, next) =>  {
     let errorFound = false;
     let error = [];
   
@@ -24,4 +24,4 @@ const checkSignUpData = (req, res, next) =>  {
     if (errorFound) {return res.status(400).json({error})} else {next()}
 }
 
-module.exports = checkSignUpData;
+module.exports = check;
