@@ -7,8 +7,9 @@ const cors = require('cors');
 
 const CORS = require('./services/CORS');
 
-let users = require('./routes/users');
-let exchanges = require('./routes/exchanges');
+const auth = require('./routes/auth');
+const users = require('./routes/users');
+const exchanges = require('./routes/exchanges');
 
 var app = express();
 
@@ -21,6 +22,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
+app.use(`${process.env.APP_MAIN}auth`, auth);
 app.use(`${process.env.APP_MAIN}users`, users);
 app.use(`${process.env.APP_MAIN}exchanges`, exchanges);
 

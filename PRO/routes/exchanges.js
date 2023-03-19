@@ -6,7 +6,7 @@ const verifyJWT = require('../middleware/verifyJWT');
 
 router.get('/', verifyJWT, (req, res) => {
   
-return res.json({data: 'loogged in'})
+return res.json({status: 'success', message: 'exchange route', data: ''})
 
 });
 

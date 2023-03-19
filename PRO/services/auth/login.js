@@ -10,21 +10,20 @@ const DB = require('../../config/mysql.js');
  */
 const login = (req, res, next) => {
 
-    let errorOn = false;
-    let error = {}
+    let error = {status: '', message: {email: '', pwd: ''}}
   
-    if (!req.body.email || !req.body.pwd) errorOn = true;
+    if (!req.body.email || !req.body.pwd) error.status = 'failed';
   
-    !req.body.email ? error.email  = "Field email is required" : '';
-    !req.body.pwd ? error.password = "Field password is required" : '';
+    if (!req.body.email) error.message.email  = 'Field email is required';
+    if (!req.body.pwd) error.message.pwd = 'Field password is required';
   
-    if (errorOn) {return res.status(400).json(error)}
+    if (error.status === 'failed') {return res.status(400).json(error)}
 
-    let sql = `SELECT pwd FROM users WHERE email LIKE '${req.body.email}';`
+    let sql = 'SELECT pwd FROM users WHERE email = ?';
 
-    DB.query(sql, (err, result) => {
+    DB.query(sql, [req.body.email], (err, result) => {
         if (result.length < 1) {
-            return res.status(400).json({error: "No account associated with the email!"})
+            return res.status(400).json({status: 'failed', message: 'No account associated with the email!'})
         }
         if (err) throw err.message;
         let resu = JSON.parse(JSON.stringify(result[0]));
@@ -34,7 +33,7 @@ const login = (req, res, next) => {
 
             // Handle the result of comparing submited password to stored one.
             if (!resultHash) {
-                return res.status(401).json({error: "Passwords don't match to this account!"})
+                return res.status(401).json({status: 'failed', message: 'Passwords don/\'t match to this account!'})
             } 
             next();
         })
