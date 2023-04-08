@@ -1,15 +1,16 @@
-
-
-
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300;700&display=swap');
 
 .nav-EB {
+    background-color: #fff;
     display: grid;
     position: absolute;
     top: 0;
     width: 100%;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: 80px;
-    border-bottom: 2px solid gray;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 18px;
 }
 
 .nav-btn {
@@ -39,4 +40,8 @@
 
 .nav-btn.out:hover {
     color: red;
+}
+
+.nav-btn:hover {
+    color: gray;
 }
