@@ -1,32 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 
 import AxiosInstance from '../utilities/AxiosInstance';
-import { useNavigate, Link } from 'react-router-dom';
 import CheckIfLogged from '../utilities/CheckIfLogged';
+
 import Nav from './Nav.jsx';
+import "../css/shared-sign-up-in.css"
 import '../css/nav.css';
 import "../css/sign-in.css"
 
 
-import { useEffect, useState } from 'react';
 
 const SignIn = () => {
-    const navigate = useNavigate();
 
+    const navigate = useNavigate();
     const [logged , setLogged] = useState(CheckIfLogged);
     
     const [email, setEmail]             = useState(null);
-    const [emailError, setEmailError]   = useState(null);
     const [pwd, setPwd]                 = useState(null);
-    const [pwdError, setPwdError]       = useState(null);
     const [error, setError]             = useState(null);
 
 
     useEffect(() => {
-
-        if (logged) {
-            navigate("/");
-        }
+         // We redirect user if he's logged in.
+        logged && navigate("/");
     });
 
 
@@ -47,7 +44,7 @@ const SignIn = () => {
     const sendInput = (e) => {
         e.preventDefault();
 
-        AxiosInstance.post('/users/signin', {email: email, pwd: pwd})
+        AxiosInstance.post('/auth/signin', {email: email, pwd: pwd})
         .then((res) => {
             handleResponse(res.data);
         })
@@ -58,9 +55,7 @@ const SignIn = () => {
 
 
     const displayErrors = (err) => {
-        err.email ? setEmailError(err.email) : setEmailError(null);
-        err.password ? setPwdError(err.password) : setPwdError(null);
-        err.error ? setError(err.error) : setError(null);
+        err.message ? setError(err.message) : setError(null);
     }
 
 
@@ -72,6 +67,7 @@ const SignIn = () => {
             localStorage.setItem('TOKEN', res.accessToken);
         }
 
+         // We redirect user after we stored the token.
         navigate('/account');
     }
 
@@ -79,14 +75,22 @@ const SignIn = () => {
     return ( 
         <React.Fragment>
         <Nav />
-        <form className='sign-in_form' onSubmit={sendInput}>
-            <input type="text" name='email' placeholder='Email' onChange={e => handleInput(e)}/>
-            <strong>{emailError}</strong>
-            <input type="pwd" name='pwd' placeholder='Password' onChange={e => handleInput(e)}/>
-            <strong><Link className='' to={'/reset-password'}>Forgot password ?</Link></strong>
-            <strong>{pwdError}</strong>
-            <strong>{error}</strong>
-            <button type='submit'>Log in</button>
+        <form className='sign-in _form' onSubmit={sendInput}>
+            <div className="sign-in_input-wrapper">
+                <h6 className='sign-in _title'>Sign In</h6>
+                <input className='sign-in _input' type="text" name='email' placeholder='Email' onChange={e => handleInput(e)}/>
+                <strong>{error}</strong>
+                <input className='sign-in _input' type="pwd" name='pwd' placeholder='Password' onChange={e => handleInput(e)}/>
+            </div>
+            <div className="sign-in_control-wrapper">
+                <h5 className='sign-in_policy'>
+                    Forgot your password ?
+                    Click the link to reset it.
+                    Please note that password reset is only available once per day.
+                    <Link className='sign-in_forgot' to={'/reset-password'}>Forgot password ?</Link>
+                </h5>
+                <button className='sign-in _btn' type='submit'>Log in</button>
+            </div>
         </form>
     </React.Fragment>
      );

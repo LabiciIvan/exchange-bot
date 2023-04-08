@@ -5,14 +5,15 @@ const morgan = require('morgan');
 const path = require('path');
 const cors = require('cors');
 
+// CORS configuration
 const CORS = require('./services/CORS');
 
+// Loading routes.
 const auth = require('./routes/auth');
 const users = require('./routes/users');
 const exchanges = require('./routes/exchanges');
 
 var app = express();
-
 app.use(cors(CORS));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -21,7 +22,7 @@ app.use(morgan('tiny'));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+// EB api routes.
 app.use(`${process.env.APP_MAIN}auth`, auth);
 app.use(`${process.env.APP_MAIN}users`, users);
 app.use(`${process.env.APP_MAIN}exchanges`, exchanges);

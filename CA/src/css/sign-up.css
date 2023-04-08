@@ -1,0 +1,144 @@
+.sign-up._form {
+    height: 90%;
+    max-height: 600px;
+    display: flex;
+    flex-direction: column;
+    padding: 15px 0 15px 0px;
+}
+
+.sign-up_input-wrapper {
+    width: 100%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content: center;
+}
+
+/* .sign-up_control-wrapper {
+    width: 100%;
+    height: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content: center;
+    border-top: 1px solid #dadde1;
+} */
+.sign-up_control-wrapper {
+    display: grid;
+    flex-direction: column;
+    grid-template-columns: 1fr;
+    grid-template-rows: 2.5fr 0.5fr 0.5fr;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid #dadde1;
+    row-gap: 5px;
+}
+
+.sign-up._input {
+    height: 40px;
+    width: 300px;
+}
+
+.sign-up ._btn {
+    height: 40px;
+    width: 150px;
+    margin-top: 0; 
+    justify-self: center;
+}
+
+.sign-up_errors {
+    display: flex;
+    flex-direction:  column;
+}
+
+/* .sign-up_policy {
+    height: 70%;
+    max-height: 90px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px 0 20px;
+    color: #777;
+    font-size: 11px;
+    line-height: 17px;
+    font-family: 'Nunito Sans', sans-serif;
+} */
+
+.sign-up_policy {
+    display: grid;
+    grid-area: 1/1/2/1;
+    padding: 5px;
+    color: #777;
+    font-size: 11px;
+    font-family: 'Nunito Sans', sans-serif;
+}
+
+.sign-up_policy-accept {
+    display: grid;
+    grid-template-columns: 0.2fr 1fr;
+}
+
+.sign-up._title {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.sign-up_check-box {
+    display: grid;
+    width: 15px;
+    height: 15px;
+    align-self: center;
+    justify-self: center;
+}
+.sign-up_check-box-none,
+.sign-up_check-box-error {
+    display: grid;
+    width: 17px;
+    height: 18px;
+    border-radius: 4px;
+    align-self: center;
+    justify-self: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.sign-up_check-box-error {
+    border: 2px solid red;
+}
+
+
+
+
+@media only screen and (max-width: 1600px) {
+
+    .sign-up._form {
+        height: 60%;
+        max-height: 600px;
+        padding: 5px 0 5px 0px;
+    }
+
+    .sign-up_input-wrapper {
+        height: 70%;
+    }
+
+    .sign-up_policy {
+        height: 70%;
+        max-height: 90px;
+        padding: 0 10px 0 10px;
+        font-size: 9px;
+    }
+
+    .sign-up._title {
+        font-size: 15px;
+    }
+
+    .sign-up ._btn {
+        height: 35px;
+        width: 150px; 
+        margin-top: 5px;
+    }
+    .sign-up._input {
+        height: 30px;
+    }
+  }

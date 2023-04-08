@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const AxiosInstance = axios.create({
-    baseURL : 'http://localhost:8000/',
+    baseURL : 'http://localhost:8000/EB/api/v1',
     headers: {
         Accept: 'application/json',
         trusted: 'EB'

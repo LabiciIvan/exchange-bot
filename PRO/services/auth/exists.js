@@ -21,8 +21,7 @@ const exists = (req, res, next) => {
 
             if (resultQuery.length > 0) {
 
-                res.status(200);
-                return res.send({status: 'failed', message: 'This email is already taken!'});
+                return res.status(400).send({status: 'failed', email: ['This email is already taken!']});
 
             } else {
 

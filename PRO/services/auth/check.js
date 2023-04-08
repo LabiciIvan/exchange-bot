@@ -1,4 +1,5 @@
 const express = require('express');
+const Validator = require('../Validator');
 
 
 /**
@@ -11,16 +12,45 @@ const express = require('express');
  * 
  */
 const check = (req, res, next) =>  {
-    let error = {status: '', message: {name: '', email: '', pwd: '', pwd_confirm: ''}};
-  
-    if (!req.body.name || !req.body.email || !req.body.pwd || !req.body.pwd_confirm ) error.status = 'failed';
-  
-    if (!req.body.name) error.message.name = 'Field name is required!';
-    if (!req.body.email) error.message.email = 'Field email is required!';
-    if (!req.body.pwd) error.message.pwd = 'Field password is required!';
-    if (!req.body.pwd_confirm) error.message.pwd_confirm = 'Field password confirmation is required!';
+
+    // Collect the data sent to backend.
+    const policy           = req.body.policy;
+    const name             = req.body.name;
+    const email            = req.body.email;
+    const pwd              = req.body.pwd;
+    const pwd_confirmation = req.body.pwd_confirm;
     
-    if (error.status === 'failed') {return res.status(400).send(error)} else {next()}
+    // Declare rules for Validator.
+    const rules = {
+        policy: 'required',
+        name: 'alphaWithout:<>{}!;:#@|min:2|max:20|required',
+        email : 'required|email|max:30',
+        pwd : 'required|alphaNumeric|confirmed',
+        pwd_confirmation: 'required',
+    }
+
+    // Declare values for Validator.
+    const values = {
+        policy: policy,
+        name : name,
+        email : email,
+        pwd : pwd,
+        pwd_confirmation:  pwd_confirmation,
+    }
+
+    // Instantiate a new object to use validator class.
+    const Validation = new Validator(rules, values);
+
+    // Ask Validator to check for errors.
+    Validation.check()
+        .then(result => {
+            // Successfull validation, move to next middleware.
+            next();
+        })
+        .catch(error => {
+            // Failed validation, send errors to frontend.
+            res.status(400).send(error);
+        });
 }
 
 module.exports = check;

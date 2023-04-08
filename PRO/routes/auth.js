@@ -18,9 +18,9 @@ const limitResetPWD = require('../services/auth/limitResetPWD');
 // Route to sign up [ REGISTER or CREATE ACCOUNT ]
 router.post('/signup',check, exists, hashPWD, (req, res) => {
 
-  const SQL_QUERY = 'INSERT INTO users(name, email, pwd) VALUES (?,?,?)';
+  const SQL_QUERY = 'INSERT INTO users(name, email, pwd, policy_agreement) VALUES (?,?,?,?)';
 
-  DB.query(SQL_QUERY, [req.body.name, req.body.email, req.body.pwd], (err, result) => {
+  DB.query(SQL_QUERY, [req.body.name, req.body.email, req.body.pwd, 'agreement_2023'], (err, result) => {
     if (err) throw err.message;
 
     const result2 = JSON.parse(JSON.stringify(result));
