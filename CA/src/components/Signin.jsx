@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
+import Validator from '../utilities/Validator';
 import AxiosInstance from '../utilities/AxiosInstance';
 import CheckIfLogged from '../utilities/CheckIfLogged';
 
@@ -9,20 +10,28 @@ import "../css/shared-sign-up-in.css"
 import '../css/nav.css';
 import "../css/sign-in.css"
 
-
-
 const SignIn = () => {
 
     const navigate = useNavigate();
     const [logged , setLogged] = useState(CheckIfLogged);
     
-    const [email, setEmail]             = useState(null);
-    const [pwd, setPwd]                 = useState(null);
-    const [error, setError]             = useState(null);
+    const [email, setEmail]                     = useState(null);
+    const [password, setPassword]               = useState(null);
+    const [email_error, setEmailError]          = useState(null);
+    const [password_error, setPasswordError]    = useState(null);
 
+    const rules = {
+        email: 'required|email|max:30',
+        password: 'required',
+    }
+
+    const values = {
+        email: email,
+        password: password,
+    }
 
     useEffect(() => {
-         // We redirect user if he's logged in.
+        // We redirect user if he's logged in.
         logged && navigate("/");
     });
 
@@ -32,8 +41,8 @@ const SignIn = () => {
             case 'email':
                 setEmail(e.target.value);
                 break;
-            case 'pwd': 
-                setPwd(e.target.value);
+            case 'password': 
+                setPassword(e.target.value);
                 break;
             default:
                 break;
@@ -44,18 +53,40 @@ const SignIn = () => {
     const sendInput = (e) => {
         e.preventDefault();
 
-        AxiosInstance.post('/auth/signin', {email: email, pwd: pwd})
-        .then((res) => {
-            handleResponse(res.data);
-        })
-        .catch((err) => {
-            displayErrors(err.response.data);
-        })
+        // Create a new instance of the Validator Class.
+        const Validate =  new Validator(rules, values);
+
+        // Ask Validator to check for errors.
+        Validate.check()
+            .then(() => {
+                setEmailError(null);
+                setPasswordError(null);
+                
+                // Successful frontend validation, send to backend.
+                AxiosInstance.post('/auth/signin', {email: email, pwd: password})
+                    .then((res) => {
+                        // Successful response from backend.
+                        handleResponse(res.data);
+                    })
+                    .catch((err) => {
+                    // Unsuccessful response from backend.
+                    const errors = {...err.response.data};
+                    errors.email ? setEmailError(errors.email) : setEmailError(null);
+                    errors.password ? setPasswordError(errors.password) : setPasswordError(null);
+                    });
+            })
+            .catch(err => {
+                // Unsuccessful frontend validation, display errors.
+                err.email ? setEmailError(err.email) : setEmailError(null);
+                err.password ? setPasswordError(err.password) : setPasswordError(null);
+            });
     }
 
 
-    const displayErrors = (err) => {
-        err.message ? setError(err.message) : setError(null);
+    const displayError = (err) => {
+        return err.map(e => {
+            return <li className='error-message' key={e}>{e}</li>
+        });
     }
 
 
@@ -79,8 +110,9 @@ const SignIn = () => {
             <div className="sign-in_input-wrapper">
                 <h6 className='sign-in _title'>Sign In</h6>
                 <input className='sign-in _input' type="text" name='email' placeholder='Email' onChange={e => handleInput(e)}/>
-                <strong>{error}</strong>
-                <input className='sign-in _input' type="pwd" name='pwd' placeholder='Password' onChange={e => handleInput(e)}/>
+                {email_error ? displayError(email_error) : ''}
+                <input className='sign-in _input' type="password" name='password' placeholder='Password' onChange={e => handleInput(e)}/>
+                {password_error ? displayError(password_error) : ''}
             </div>
             <div className="sign-in_control-wrapper">
                 <h5 className='sign-in_policy'>

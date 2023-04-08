@@ -32,4 +32,3 @@ const exists = (req, res, next) => {
 }
 
 module.exports = exists;
-
