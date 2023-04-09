@@ -3,7 +3,7 @@ import React from 'react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import checkIfLogged from '../utilities/CheckIfLogged';
+import CheckAndLogg from '../utilities/CheckAndLogg';
 
 import '../css/nav.css'
 
@@ -16,7 +16,7 @@ const Nav = () => {
       navigate("/");
    }
 
-   const [logged, setLogged] = useState(checkIfLogged);
+   const [logged, setLogged] = useState(CheckAndLogg);
 
 
    const renderGuest = () => {

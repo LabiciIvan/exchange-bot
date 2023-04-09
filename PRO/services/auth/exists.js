@@ -1,4 +1,3 @@
-const express = require('express');
 const DB = require('../../config/mysql.js');
 
 

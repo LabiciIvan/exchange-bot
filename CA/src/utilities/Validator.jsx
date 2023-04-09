@@ -146,7 +146,7 @@ class Validator {
      */
     ruleExecutor = {
         required: (key, val) => {
-            if (val === '' || val === null) this.packError(this.ruleError['required'](key), key);
+            if (val === '' || val === null || val === undefined) this.packError(this.ruleError['required'](key), key);
         },
         min: (key, val, condition) => {
             if (val === undefined || val === '' || val == null) {

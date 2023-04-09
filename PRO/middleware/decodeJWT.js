@@ -1,16 +1,16 @@
-const express = require('express');
 const jwt = require('jsonwebtoken');
 
 
-const decodeJWT = (req, res, next) => {
+/**
+ * 
+ * @param {jwt} token - The JWT token to decode.
+ * @returns {object|null} - The decoded JWT token or null if token is invalid.
+ */
+const decodeJWT = (token) => {
     
-    const authHeader = req.headers['authorization'];
-    
-    const token = authHeader && authHeader.split(' ')[1];
+    const tokenDecoded = jwt.decode(token);
 
-    const result = jwt.decode(token)
-
-    next();
+    return tokenDecoded;
 }
 
 module.exports = decodeJWT;

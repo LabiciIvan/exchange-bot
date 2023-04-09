@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import Validator from '../utilities/Validator';
 import AxiosInstance from '../utilities/AxiosInstance';
-import CheckIfLogged from '../utilities/CheckIfLogged';
+import CheckAndLogg from '../utilities/CheckAndLogg';
 
 import Nav from './Nav.jsx';
 import Policy from './Policy';
@@ -14,7 +14,7 @@ import '../css/nav.css';
 const SignUp = () => {
     
     const navigate                                          = useNavigate();
-    const [logged, setLogged]                               = useState(CheckIfLogged);
+    const [logged, setLogged]                               = useState(CheckAndLogg);
     
     const [policy, setPolicy]                               = useState('');
     const [name, setName]                                   = useState('');
