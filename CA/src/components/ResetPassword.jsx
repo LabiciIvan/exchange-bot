@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Nav from './Nav';
 
-import CheckIfLogged from '../utilities/CheckIfLogged';
+import CheckAndLogg from '../utilities/CheckAndLogg';
 import { useNavigate, Link } from 'react-router-dom';
 import AxiosInstance from '../utilities/AxiosInstance'
 
 const ResetPassword = () => {
     const navigate = useNavigate();
 
-    const [logged, setLogged] = useState(CheckIfLogged);
+    const [logged, setLogged] = useState(CheckAndLogg);
     const [email, setEmail] = useState(null);
 
     const [resetError, setResetError] = useState(null);

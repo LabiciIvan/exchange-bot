@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 
 import Validator from '../utilities/Validator';
 import AxiosInstance from '../utilities/AxiosInstance';
-import CheckIfLogged from '../utilities/CheckIfLogged';
+import CheckAndLogg from '../utilities/CheckAndLogg';
 
 import Nav from './Nav.jsx';
 import "../css/shared-sign-up-in.css"
@@ -13,7 +13,7 @@ import "../css/sign-in.css"
 const SignIn = () => {
 
     const navigate = useNavigate();
-    const [logged , setLogged] = useState(CheckIfLogged);
+    const [logged , setLogged] = useState(CheckAndLogg);
     
     const [email, setEmail]                     = useState(null);
     const [password, setPassword]               = useState(null);
@@ -66,7 +66,7 @@ const SignIn = () => {
                 AxiosInstance.post('/auth/signin', {email: email, pwd: password})
                     .then((res) => {
                         // Successful response from backend.
-                        handleResponse(res.data);
+                        handleResponse(res.data.data);
                     })
                     .catch((err) => {
                     // Unsuccessful response from backend.
@@ -91,14 +91,9 @@ const SignIn = () => {
 
 
     const handleResponse = (res) => {
-
-        const token = CheckIfLogged();
-
-        if (!token) {
-            localStorage.setItem('TOKEN', res.accessToken);
-        }
-
-         // We redirect user after we stored the token.
+        CheckAndLogg(res);
+        
+        // We redirect user after we stored the token.
         navigate('/account');
     }
 
