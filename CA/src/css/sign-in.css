@@ -73,6 +73,14 @@ body {
     display: flex;
 }
 
+.error-message {
+    font-size: 12px;
+    list-style-type: none;
+    color: #c52f2c;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: bold;
+}
+
 ._none {
     display: none;
 }

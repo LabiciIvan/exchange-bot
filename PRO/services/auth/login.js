@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const express = require('express');
+const Validator = require('../Validator');
 const DB = require('../../config/mysql.js');
 
 
@@ -9,40 +9,53 @@ const DB = require('../../config/mysql.js');
  * Checks if submited password matches the one from DB.
  */
 const login = (req, res, next) => {
+    // Declare rules for Validator.
+    const rules = {
+        email: 'required|email|max:30',
+        password: 'required',
+    }
 
-    let error = {status: '', message: {email: '', pwd: ''}}
-  
-    if (!req.body.email || !req.body.pwd) error.status = 'failed';
-  
-    if (!req.body.email) error.message.email  = 'Field email is required';
-    if (!req.body.pwd) error.message.pwd = 'Field password is required';
-  
-    if (error.status === 'failed') {return res.status(400).json(error)}
+    // Declare values for Validator.
+    const values = {
+        email: req.body.email,
+        password: req.body.pwd,
+    }
 
-    let sql = 'SELECT pwd FROM users WHERE email = ?';
+    // Instantiate a new object to use validator class.
+    const Validate = new Validator(rules, values);
+    
+    // Ask Validator to check for errors.
+    Validate.check()
+        .then(() => {
+            // Successful validation, continue with custom validation.
+            let sql = 'SELECT pwd FROM users WHERE email = ?';
 
-    DB.query(sql, [req.body.email], (err, result) => {
-        if (result.length < 1) {
-            return res.status(400).json({status: 'failed', message: 'No account associated with the email!'})
-        }
-        if (err) throw err.message;
-        let resu = JSON.parse(JSON.stringify(result[0]));
-
-        bcrypt.compare(req.body.pwd, resu.pwd)
-        .then(resultHash => {
-
-            // Handle the result of comparing submited password to stored one.
-            if (!resultHash) {
-                return res.status(401).json({status: 'failed', message: 'Passwords don/\'t match to this account!'})
-            } 
-            next();
+            // Custom validation.
+            DB.query(sql, [req.body.email], (err, result) => {
+                if (result.length < 1) {
+                    return res.status(400).send({status: 'failed', email: ["No account associated with the email!"]})
+                }
+                if (err) throw err.message;
+                let resu = JSON.parse(JSON.stringify(result[0]));
+        
+                bcrypt.compare(req.body.pwd, resu.pwd)
+                .then(resultHash => {
+        
+                    // Handle the result of comparing submited password to stored one.
+                    if (!resultHash) {
+                        return res.status(401).send({status: 'failed', email: ["Passwords don't match to this account!"]})
+                    } 
+                    next();
+                })
+                .catch(err => {
+                    throw err;
+                });
+            });
         })
         .catch(err => {
-            throw err;
-        })
-    })
+            // Unsuccessful validation send errors to frontend.
+            return res.status(400).json(err);
+        });
 }
 
-
 module.exports = login;
-

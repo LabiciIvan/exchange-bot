@@ -15,15 +15,6 @@
     justify-content: center;
 }
 
-/* .sign-up_control-wrapper {
-    width: 100%;
-    height: 30%;
-    display: flex;
-    flex-direction: column;
-    align-items:center;
-    justify-content: center;
-    border-top: 1px solid #dadde1;
-} */
 .sign-up_control-wrapper {
     display: grid;
     flex-direction: column;
