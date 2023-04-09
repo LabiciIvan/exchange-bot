@@ -33,12 +33,12 @@ router.post('/signup',check, exists, hashPWD, (req, res) => {
 // Route to sign in | LOG IN
 router.post('/signin', login, (req, res) => {
   
-  let sql = 'SELECT email FROM users WHERE email = ?';
+  let sql = 'SELECT id FROM users WHERE email = ?';
 
   DB.query(sql, [req.body.email], (err, result) => {
     if (err) throw err.message;
 
-    const accessToken = jwt.sign({account: JSON.parse(JSON.stringify(result[0]))}, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1h'});
+    const accessToken = jwt.sign(JSON.parse(JSON.stringify(result[0])), process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1h'});
     
     return res.status(200).json({status: 'success', message: 'Successfully signed.', data: accessToken});
   });
