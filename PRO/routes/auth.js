@@ -18,12 +18,18 @@ const limitResetPWD = require('../services/auth/limitResetPWD');
 // Route to sign up [ REGISTER or CREATE ACCOUNT ]
 router.post('/signup',check, exists, hashPWD, (req, res) => {
 
-  const SQL_QUERY = 'INSERT INTO users(name, email, pwd, policy_agreement) VALUES (?,?,?,?)';
+  const SQL_INSERT_U= 'INSERT INTO users(name, email, pwd, policy_agreement) VALUES (?,?,?,?)';
 
-  DB.query(SQL_QUERY, [req.body.name, req.body.email, req.body.pwd, 'agreement_2023'], (err, result) => {
+  DB.query(SQL_INSERT_U, [req.body.name, req.body.email, req.body.pwd, 'agreement_2023'], (err, result) => {
     if (err) throw err.message;
-
+    
     const result2 = JSON.parse(JSON.stringify(result));
+
+    const SQL_INSERT_A = "INSERT INTO accounts (user_id) VALUES (?);"; 
+
+    DB.query(SQL_INSERT_A, [result2.insertId], (err, result) => {
+      if (err) throw err.message;
+    });
 
     return res.send({status: 'success', message: 'Your account has been created.', data: result2.insertId });
   })
@@ -33,7 +39,7 @@ router.post('/signup',check, exists, hashPWD, (req, res) => {
 // Route to sign in | LOG IN
 router.post('/signin', login, (req, res) => {
   
-  let sql = 'SELECT id FROM users WHERE email = ?';
+  let sql = 'SELECT id, admin FROM users WHERE email = ?';
 
   DB.query(sql, [req.body.email], (err, result) => {
     if (err) throw err.message;
