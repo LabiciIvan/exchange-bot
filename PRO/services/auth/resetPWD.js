@@ -1,5 +1,4 @@
 const moment = require('moment');
-const express = require('express');
 const jwt = require('jsonwebtoken');
 const DB = require('../../config/mysql.js');
 
