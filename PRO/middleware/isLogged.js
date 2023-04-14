@@ -5,16 +5,15 @@ const jwt = require('jsonwebtoken');
 /**
  * @author Ioan Labici <labici.ioan@yahoo.com>
  * 
- * Check if the token is present and not expired this
- * would be the user logged in.
+ * Check if the token is present and not expired.
  */
-const verifyJWT = (req, res, next) => {
+const isLogged = (req, res, next) => {
 
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
     if (authHeader === undefined) {
-        return res.status(401).json({status: 'error', message: 'Sorry, your login token not present!'});
+        return res.status(401).json({status: 'error', message: 'Login token not present!'});
     } 
 
     // Verify if the token isn't expired or malformed.
@@ -31,4 +30,4 @@ const verifyJWT = (req, res, next) => {
 }
 
 
-module.exports = verifyJWT;
+module.exports = isLogged;

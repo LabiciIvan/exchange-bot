@@ -33,7 +33,7 @@ const login = (req, res, next) => {
             // Custom validation.
             DB.query(sql, [req.body.email], (err, result) => {
                 if (result.length < 1) {
-                    return res.status(400).send({status: 'failed', email: ["No account associated with the email!"]})
+                    return res.status(400).send({status: 'fail', email: ["No account associated with the email!"]})
                 }
                 if (err) throw err.message;
                 let resu = JSON.parse(JSON.stringify(result[0]));
@@ -43,7 +43,7 @@ const login = (req, res, next) => {
         
                     // Handle the result of comparing submited password to stored one.
                     if (!resultHash) {
-                        return res.status(401).send({status: 'failed', email: ["Passwords don't match to this account!"]})
+                        return res.status(401).send({status: 'fail', email: ["Passwords don't match to this account!"]})
                     } 
                     next();
                 })

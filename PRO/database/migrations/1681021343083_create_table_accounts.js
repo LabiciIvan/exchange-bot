@@ -10,9 +10,10 @@ module.exports = {
         age VARCHAR(255) DEFAULT NULL,
         validated BOOLEAN DEFAULT FALSE,
         user_id INT,
+        deleted BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+        CONSTRAINT fk_accounts_users FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
     );`,
     "down": "DROP TABLE accounts"
 }
