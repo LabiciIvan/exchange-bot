@@ -10,6 +10,7 @@ module.exports = {
         age VARCHAR(255) DEFAULT NULL,
         validated BOOLEAN DEFAULT FALSE,
         user_id INT,
+        signature TEXT DEFAULT NULL,
         deleted BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

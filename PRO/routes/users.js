@@ -6,6 +6,7 @@ const DecodeToken = require('../services/DecodeToken');
 const isAdmin = require('../middleware/isAdmin');
 const Validator = require('../services/Validator');
 const moment = require('moment');
+const createSignature = require('../services/createSignature');
 
 
 // READ - route to get all the users.
@@ -53,7 +54,7 @@ router.get('/account/:userId', isLogged, (req, res) => {
         if (!isAdmin(user)) return res.status(403).json({status: 'fail', message: "Unauthorized to perform this action!"});
       }
     
-      const SQL_QUERY = 'SELECT users.name, users.email, accounts.user_id, accounts.validated, accounts.country, accounts.city, accounts.postal_zipp_code, accounts.street_address_one, accounts.profile_picture FROM users INNER JOIN accounts ON accounts.user_id=users.id WHERE users.id = ? AND users.deleted = false';
+      const SQL_QUERY = 'SELECT users.name, users.email, accounts.user_id, accounts.validated, accounts.country, accounts.city, accounts.postal_zipp_code, accounts.street_address_one, accounts.profile_picture, accounts.signature FROM users INNER JOIN accounts ON accounts.user_id=users.id WHERE users.id = ? AND users.deleted = false';
     
       const account = await new Promise((resolve, reject) => {
         DB.query(SQL_QUERY, [user_id], (err, result) => {
@@ -89,7 +90,7 @@ router.put('/account/:userId', isLogged, (req, res)  => {
     street_address_one: 'required',
     street_address_two: 'required',
     profile_picture:    'required',
-    age:                'required|numeric',
+    age:                'required|numeric'
   }
 
   const values = {
@@ -99,7 +100,7 @@ router.put('/account/:userId', isLogged, (req, res)  => {
     street_address_one: reqParsed.street_address_one,
     street_address_two: reqParsed.street_address_two, 
     profile_picture:    reqParsed.profile_picture, 
-    age:                reqParsed.age 
+    age:                reqParsed.age
   }
 
   // Instantiate a new Validator instance.
@@ -114,15 +115,17 @@ router.put('/account/:userId', isLogged, (req, res)  => {
           
           // Only user can update his account.
           if (user.id !== userId) {return res.status(403).json({status: 'fail', message: "Unauthorized to perform this action!"})}
+
+          const SIGNATURE = createSignature(process.env.EXCHANGE_SECRET);
         
           const SQL_QUERY = `
           UPDATE accounts 
-          SET country = ?,city = ?,postal_zipp_code = ?,street_address_one = ?,street_address_two = ?, profile_picture = ?,age = ?, validated = ? 
+          SET country = ?,city = ?,postal_zipp_code = ?,street_address_one = ?,street_address_two = ?, profile_picture = ?,age = ?, validated = ?, signature = ? 
           WHERE user_id = ?
           AND validated = false AND deleted = false;`;
 
           const account = await new Promise ((resolve, reject) => {
-            DB.query(SQL_QUERY, [reqParsed.country, reqParsed.city, reqParsed.postal_zipp_code, reqParsed.street_address_one, reqParsed.street_address_two, reqParsed.profile_picture, reqParsed.age, true, userId], (err, result) => {
+            DB.query(SQL_QUERY, [reqParsed.country, reqParsed.city, reqParsed.postal_zipp_code, reqParsed.street_address_one, reqParsed.street_address_two, reqParsed.profile_picture, reqParsed.age, true, SIGNATURE, userId], (err, result) => {
               if (err) reject(err + err.message);
               else resolve(result);
             });
